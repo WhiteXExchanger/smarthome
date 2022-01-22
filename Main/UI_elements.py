@@ -5,14 +5,34 @@ from tkinter.messagebox import showinfo
 
 from matplotlib import container
 
+class SettingsValues(object):
+    def __init__(self):
+        self.background = self.Background()
+        self.text = self.Text()
+        self.image = self.Image()
+
+    class Background():
+        def __init__(self):
+            self.color = '#000000'
+            self.faverites = ['#300F47','#330e45']
+    
+    class Text():
+        def __init__(self):
+            self.font = 24
+            self.color = '#FFFFFF'
+                
+    class Image():
+        def __init__(self):
+            pass
+
+settings = SettingsValues()
 
 class MainWindow(tk.Tk):
     def __init__(self, width, height):
         super().__init__()
         self.geometry(str(height)+'x'+str(height)) # Main window resolution
 
-        defaultColor = '#300F47' # Hexadecimal value for Main window color.
-        colorList = ['#300F47','#330e45'] # Some other colors
+        defaultColor = settings.background.color # Hexadecimal value for Main window color.
 
         self['bg'] = defaultColor # Binding Main window color to: defaultColor
 
@@ -52,20 +72,27 @@ class MainWindow(tk.Tk):
                 fill='both',
                 padx=50,
                 pady=50)
-            self.floors=floors
 
             self.create_floors()
 
         def create_floors(self):
-            for floor in range(self.floors):
-                tk.Button(self, text="img", font=24, bg="green")
-                tk.Button(self, text="img", font=18, bg="green")
-                tk.Button(self, text="img", font=12, bg="green")
+            self.FloorFrame(self)
+            self.FloorFrame(self)
 
             for widget in self.winfo_children():
-                widget.pack(side='bottom', padx=5, pady=5, expand=True)
+                widget.pack(side='bottom', padx=10, pady=10, ipadx=10, ipady=10, expand=True, fill='both')
 
-        class Cell_Frame(tk.Frame):
+        class FloorFrame(tk.Frame):
+            def __init__(self, container):
+                super().__init__(container, bg='yellow')
+                self.pack(
+                    side='bottom',
+                    padx=5,
+                    pady=5,
+                    expand=True,
+                    fill='both')
+
+        class CellFrame(tk.Frame):
             """Button / Image (Cell) frame\n
             Main button -> Open\n
             Img\n
@@ -81,27 +108,6 @@ class MainWindow(tk.Tk):
 
                 self.button = tk.Button(self)
                 self.button.pack()
-
-class Example_Frame(tk.Frame):
-    def __init__(self, container):
-        super().__init__(container)
-
-        options = {'padx': 5, 'pady': 5}
-
-        # label
-        self.label = tk.Label(self, text='Hello, Tkinter!')
-        self.label.pack(**options)
-        # button
-        self.button = ttk.Button(self, text='Click Me')
-        self.button['command'] = self.button_clicked
-        self.button.pack(**options)
-
-        # show the frame on the container
-        self.pack(**options)
-
-    def button_clicked(self):
-        showinfo(title='',
-                 message='Hello, Tkinter!')
 
 """
 # Create a treeview
