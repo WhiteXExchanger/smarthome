@@ -1,9 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import *
-from tkinter.messagebox import showinfo
-
-from matplotlib import container
 
 class SettingsValues(object):
     def __init__(self):
@@ -27,22 +24,25 @@ class SettingsValues(object):
 
 settings = SettingsValues()
 
-class MainWindow(tk.Tk):
+class Main(tk.Tk):
     def __init__(self, width, height):
         super().__init__()
-        self.geometry(str(height)+'x'+str(height)) # Main window resolution
+        self.geometry(str(width)+'x'+str(height)) # Main window resolution
 
-        defaultColor = settings.background.color # Hexadecimal value for Main window color.
+        self['bg'] = settings.background.color # Binding Main window color to: hexadecimal value
 
-        self['bg'] = defaultColor # Binding Main window color to: defaultColor
+        self.menu = self.Menu(self) # Creating menu widget.
+        self.app = self.App(self) # Creating application widget.
 
-        self.menu = self.MenuBar(self) # Creating menu widget.
-        self.app = self.AppFrame(self,2) # Creating application widget.
+    def refresh():
+        """for widget in self.winfo_children():
+        widget.pack(side='bottom', padx=10, pady=10, ipadx=10, ipady=10, expand=True, fill='both')"""
+        pass
 
     def close(self):
         self.quit()
 
-    class MenuBar(tk.Menu):
+    class Menu(tk.Menu):
         def __init__(self, container):
             super().__init__(container, bg='grey')
             
@@ -64,50 +64,76 @@ class MainWindow(tk.Tk):
 
             container.config(menu=self) # Sending back the menu for the Main window
 
-    class AppFrame(tk.Frame):
-        def __init__(self, container, floors):
+    class App(tk.Frame):
+        def __init__(self, container):
             super().__init__(container, bg='blue')
             self.pack(
-                expand=True,
-                fill='both',
-                padx=50,
-                pady=50)
+                    expand=True,
+                    fill='both',
+                    padx=50,
+                    pady=50
+                )
+            
+            self.floors = []
 
-            self.create_floors()
+            self.floors.append(self.create_floors())
 
         def create_floors(self):
-            self.FloorFrame(self)
-            self.FloorFrame(self)
+            self.Floor(self)
 
-            for widget in self.winfo_children():
-                widget.pack(side='bottom', padx=10, pady=10, ipadx=10, ipady=10, expand=True, fill='both')
-
-        class FloorFrame(tk.Frame):
+        class Floor(tk.Frame):
             def __init__(self, container):
                 super().__init__(container, bg='yellow')
                 self.pack(
-                    side='bottom',
-                    padx=5,
-                    pady=5,
-                    expand=True,
-                    fill='both')
+                        side='bottom',
+                        padx=10,
+                        pady=10,
+                        expand=True,
+                        fill='both'
+                    )
+                
+                self.create_cell()
 
-        class CellFrame(tk.Frame):
-            """Button / Image (Cell) frame\n
-            Main button -> Open\n
-            Img\n
-            Rename button\n
-            Set_image button\n
-            Del button
-            """
+            def create_cell(self):
+                self.Room(self)
 
-            def __init__(self, container):
-                super().__init__(container)
+            class Room(tk.Frame):
+                def __init__(self, container):
+                    super().__init__(container, width=300, height=100, bg='brown')
+                    """self.pack(
+                        side='left',
+                        padx=10,
+                        fill='x'
+                    )"""
 
-                self= tk.Frame(container)
+                    self.grid()
 
-                self.button = tk.Button(self)
-                self.button.pack()
+                    self.columnconfigure(0, weight=1)
+                    self.columnconfigure(1, weight=3)
+                    self.columnconfigure(2, weight=1)
+
+                    self.create_buttons()
+
+                def create_buttons(self):
+                    self.RoomElements(self)
+
+                class RoomElements(object):
+                    def __init__(self, container):
+                        
+                        self.delete = tk.Button(container, bg='red', text="kuka", width=20, height=20, command=lambda: self.dele(container))
+                        self.delete.grid(row=0, column=0)
+
+                        self.rename = tk.Button(container, bg='white', text="rename", width=20, height=20, command=lambda: self.dele(self.rename))
+                        self.rename.grid(row=0, column=2)
+
+                        self.move = tk.Button(container, bg='yellow', text="move", width=20, height=20, command=lambda: self.dele(self.move))
+                        self.move.grid(row=3, column=0)
+
+                        self.img = tk.Button(container, bg='green', text="img", width=20, height=20, command=lambda: self.dele(self.img))
+                        self.img.grid(row=3, column=1)
+
+                    def dele(self,object):
+                        object.destroy()
 
 """
 # Create a treeview
@@ -152,7 +178,7 @@ for property in city.properties:
 if __name__ == "__main__":
     width=1024
     height=768
-    app = MainWindow(width,height)
+    app = Main(width,height)
 
     app.mainloop()
 else:
