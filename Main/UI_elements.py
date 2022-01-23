@@ -67,12 +67,13 @@ class Main(tk.Tk):
     class App(tk.Frame):
         def __init__(self, container):
             super().__init__(container, bg='blue')
-            self.pack(
+            """self.pack(
                     expand=True,
                     fill='both',
                     padx=50,
                     pady=50
-                )
+                )"""
+            self.pack()
             
             self.floors = []
 
@@ -84,13 +85,14 @@ class Main(tk.Tk):
         class Floor(tk.Frame):
             def __init__(self, container):
                 super().__init__(container, bg='yellow')
-                self.pack(
+                """self.pack(
                         side='bottom',
                         padx=10,
                         pady=10,
                         expand=True,
                         fill='both'
-                    )
+                    )"""
+                self.pack()
                 
                 self.create_cell()
 
@@ -101,12 +103,12 @@ class Main(tk.Tk):
                 def __init__(self, container):
                     super().__init__(container, width=300, height=100, bg='brown')
                     """self.pack(
-                        side='left',
-                        padx=10,
-                        fill='x'
+                            side='left',
+                            padx=10,
+                            fill='x'
                     )"""
 
-                    self.grid()
+                    self.pack()
 
                     self.columnconfigure(0, weight=1)
                     self.columnconfigure(1, weight=3)
@@ -122,6 +124,9 @@ class Main(tk.Tk):
                         
                         self.delete = tk.Button(container, bg='red', text="kuka", width=20, height=20, command=lambda: self.dele(container))
                         self.delete.grid(row=0, column=0)
+
+                        self.label = tk.Label(container, text='Room', width=60, height=20)
+                        self.label.grid(row=0, column=1)
 
                         self.rename = tk.Button(container, bg='white', text="rename", width=20, height=20, command=lambda: self.dele(self.rename))
                         self.rename.grid(row=0, column=2)
@@ -176,9 +181,9 @@ for property in city.properties:
 """
 
 if __name__ == "__main__":
-    width=1024
-    height=768
-    app = Main(width,height)
+    #width=1024
+    #height=768
+    app = Main(1024,768)
 
     app.mainloop()
 else:
